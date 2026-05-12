@@ -44,7 +44,7 @@ interface MusicState {
   
   // UI State
   sidebarOpen: boolean;
-  activePanel: 'editor' | 'library' | 'analysis' | 'practice' | 'mixer' | 'recorder';
+  activePanel: 'dashboard' | 'editor' | 'library' | 'analysis' | 'practice' | 'mixer' | 'recorder';
   
   // Actions
   setCurrentSong: (song: Song | null) => void;
@@ -133,7 +133,7 @@ export const useMusicStore = create<MusicState>()(
         songs: [],
         recentSongs: [],
         sidebarOpen: true,
-        activePanel: 'editor',
+        activePanel: 'dashboard',
 
         // Song actions
         setCurrentSong: (song) => {

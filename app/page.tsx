@@ -12,32 +12,22 @@ import { SongAnalysis } from "@/components/analysis/song-analysis";
 import { PracticeMode } from "@/components/practice/practice-mode";
 import { RecordingStudio } from "@/components/recorder/recording-studio";
 import { StemMixer } from "@/components/mixer/stem-mixer";
-
-export type View =
-  | "dashboard"
-  | "library"
-  | "editor"
-  | "analysis"
-  | "practice"
-  | "recorder"
-  | "mixer";
+import { useMusicStore } from "@/store/music-store";
 
 export default function Home() {
-  const [currentView, setCurrentView] = useState<View>("dashboard");
+  const { activePanel, setActivePanel } = useMusicStore();
   const [isPracticeFullscreen, setIsPracticeFullscreen] = useState(false);
 
   const renderView = () => {
-    switch (currentView) {
+    switch (activePanel) {
       case "dashboard":
-        return <Dashboard onNavigate={setCurrentView} />;
+        return <Dashboard />;
       case "library":
-        return <SongLibrary onSelectSong={() => setCurrentView("editor")} />;
+        return <SongLibrary onSelectSong={() => setActivePanel("editor")} />;
       case "editor":
         return <TabEditor />;
       case "analysis":
-        return (
-          <SongAnalysis onOpenEditor={() => setCurrentView("editor")} />
-        );
+        return <SongAnalysis onOpenEditor={() => setActivePanel("editor")} />;
       case "practice":
         return (
           <PracticeMode
@@ -47,7 +37,7 @@ export default function Home() {
             }
             onExit={() => {
               setIsPracticeFullscreen(false);
-              setCurrentView("dashboard");
+              setActivePanel("dashboard");
             }}
           />
         );
@@ -56,11 +46,11 @@ export default function Home() {
       case "mixer":
         return <StemMixer />;
       default:
-        return <Dashboard onNavigate={setCurrentView} />;
+        return <Dashboard />;
     }
   };
 
-  if (isPracticeFullscreen && currentView === "practice") {
+  if (isPracticeFullscreen && activePanel === "practice") {
     return (
       <div className="h-screen bg-background">
         <PracticeMode
@@ -68,7 +58,7 @@ export default function Home() {
           onToggleFullscreen={() => setIsPracticeFullscreen(false)}
           onExit={() => {
             setIsPracticeFullscreen(false);
-            setCurrentView("dashboard");
+            setActivePanel("dashboard");
           }}
         />
       </div>
@@ -77,15 +67,15 @@ export default function Home() {
 
   return (
     <div className="flex h-screen bg-background overflow-hidden">
-      <Sidebar currentView={currentView} onNavigate={setCurrentView} />
+      <Sidebar />
 
       <div className="flex-1 flex flex-col min-w-0">
-        <Topbar currentView={currentView} onNavigate={setCurrentView} />
+        <Topbar />
 
         <main className="flex-1 overflow-auto">
           <AnimatePresence mode="wait">
             <motion.div
-              key={currentView}
+              key={activePanel}
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}

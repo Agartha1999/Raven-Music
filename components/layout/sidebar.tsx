@@ -20,7 +20,7 @@ import { cn } from '@/lib/utils';
 import { useMusicStore } from '@/store/music-store';
 
 const navItems = [
-  { id: 'home', icon: Home, label: 'Dashboard', panel: null },
+  { id: 'dashboard', icon: Home, label: 'Dashboard', panel: 'dashboard' as const },
   { id: 'editor', icon: FileMusic, label: 'Tab Editor', panel: 'editor' as const },
   { id: 'library', icon: Library, label: 'Library', panel: 'library' as const },
   { id: 'practice', icon: Guitar, label: 'Practice', panel: 'practice' as const },
@@ -67,11 +67,11 @@ export function Sidebar() {
       {/* Navigation */}
       <nav className="flex-1 py-4 px-2 space-y-1 overflow-y-auto">
         {navItems.map((item) => {
-          const isActive = item.panel === activePanel || (item.id === 'home' && !activePanel);
+          const isActive = item.panel === activePanel;
           return (
             <button
               key={item.id}
-              onClick={() => setActivePanel(item.panel || 'editor')}
+              onClick={() => setActivePanel(item.panel)}
               className={cn(
                 'w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-200',
                 'hover:bg-sidebar-accent group relative',
